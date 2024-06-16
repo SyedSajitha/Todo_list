@@ -25,7 +25,7 @@ const Todolist = ({ category, todos = [], updateTodos }) => {
     }
     let now = new Date();
     let addedOn = now.toLocaleString();
-    let newTodoItem = { title: newTitle, priority: newPriority, addedOn: addedOn, pinned: false , category : category };
+    let newTodoItem = { title: newTitle, priority: newPriority, addedOn: addedOn, pinned: false };
     let updatedTodoArr = [newTodoItem, ...todos]; // Add the new todo at the beginning
     updateTodos(category, updatedTodoArr);
     setNewTitle('');
