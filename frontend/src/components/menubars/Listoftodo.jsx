@@ -71,7 +71,7 @@ const Listoftodo = () => {
   const filteredCards = cardsData.filter(card => card.title.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
-    <div className=' p-4 text-center '>
+    <div className=' p-4 text-center dark:bg-black '>
       <IoIosArrowBack  size={20} className='cursor-pointer' onClick={navigateBack}/>
        <input className="search-bar  mx-auto mb-2  placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-pink-500 focus:ring-pink-500 focus:ring-1 sm:text-sm  dark:bg-black"
          type='text'

@@ -1,168 +1,104 @@
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import "./calender.css";
+// Calendar.jsx
 import { IoIosArrowBack } from "react-icons/io";
+import React, { useState, useEffect } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Import Calendar's stylesheet
+import './calender.css'; // Your custom styles
 import { useNavigate } from 'react-router-dom';
 
 const Calender = () => {
-const [selectedDate, setSelectedDate] = useState(null);
-const [eventName, setEventName] = useState("");
-const [events, setEvents] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState({});
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [eventText, setEventText] = useState('');
 
-const Date_Click_Fun = (date) => {
-setSelectedDate(date);
-};
-
-const Event_Data_Update = (event) => {
-setEventName(event.target.value);
-};
-
-const Create_Event_Fun = () => {
-if (selectedDate && eventName) {
-const newEvent = {
-id: new Date().getTime(),
-date: selectedDate,
-title: eventName,
-};
-setEvents([...events, newEvent]);
-setSelectedDate(null);
-setEventName("");
-setSelectedDate(newEvent.date);
-}
-};
-
-const Update_Event_Fun = (eventId, newName) => {
-const updated_Events = events.map((event) => {
-if (event.id === eventId) {
-return {
-...event,
-title: newName,
-};
-}
-return event;
-});
-setEvents(updated_Events);
-};
-
-const Delete_Event_Fun = (eventId) => {
-const updated_Events = events.filter((event) => event.id !== eventId);
-setEvents(updated_Events);
-};
-
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const navigateBack = () => {
     navigate(-1);
   };
 
 
-return (
-<div className="app">
-<IoIosArrowBack  size={20} className='cursor-pointer' onClick={navigateBack}/>
-<h1 className=""> Add Your Events </h1>
-<div className="container">
-<div className="calendar-container">
-<Calendar
-value={selectedDate}
-onClickDay={Date_Click_Fun}
-tileClassName={({ date }) =>
-selectedDate &&
-date.toDateString() === selectedDate.toDateString()
-? "selected"
-: events.some(
-(event) =>
-event.date.toDateString() ===
-date.toDateString(),
-)
-? "event-marked"
-: ""
-}
-/>{" "}
-</div>
-<div className="event-container">
-{" "}
-{selectedDate && (
-<div className="event-form">
-<h2>  </h2>{" "}
-<p>
-{" "}
-<h2></h2>
-Selected Date: {selectedDate.toDateString()}{" "}
-</p>{" "}
-<input
-className="p-2 m-3"
-type="text"
-placeholder="Event Name"
-value={eventName}
-onChange={Event_Data_Update}
-/>{" "}
-<button
-className="create-btn"
-onClick={Create_Event_Fun}
->
-Click Here to Add Event{" "}
-</button>{" "}
-</div>
-)}
-{events.length > 0 && selectedDate && (
-<div className="event-list">
-<h2>  </h2>{" "}
-<div className="event-cards">
-{" "}
-{events.map((event) =>
-event.date.toDateString() ===
-selectedDate.toDateString() ? (
-<div
-key={event.id}
-className="event-card"
->
-<div className="event-card-header">
-<span className="event-date">
-{" "}
-{event.date.toDateString()}{" "}
-</span>{" "}
-<div className="event-actions">
-<button
-className="update-btn"
-onClick={() =>
-Update_Event_Fun(
-event.id,
-prompt(
-"ENTER NEW TITLE",
-),
-)
-}
->
-Update Event{" "}
-</button>{" "}
-<button
-className="delete-btn"
-onClick={() =>
-Delete_Event_Fun(
-event.id,
-)
-}
->
-Delete Event{" "}
-</button>{" "}
-</div>{" "}
-</div>{" "}
-<div className="event-card-body">
-<p className="event-title">
-{" "}
-{event.title}{" "}
-</p>{" "}
-</div>{" "}
-</div>
-) : null,
-)}{" "}
-</div>{" "}
-</div>
-)}{" "}
-</div>{" "}
-</div>{" "}
-</div>
-);
+  useEffect(() => {
+    // Load events from localStorage on component mount
+    const storedEvents = JSON.parse(localStorage.getItem('events')) || {};
+    setEvents(storedEvents);
+  }, []);
+
+  const saveEventsToLocalStorage = (events) => {
+    // Save events to localStorage
+    localStorage.setItem('events', JSON.stringify(events));
+  };
+
+  const handleDateClick = (date) => {
+    // Set selected date and event text for the date
+    setSelectedDate(date);
+    const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    setEventText(events[formattedDate] || ''); // Load existing event text if any
+  };
+
+  const handleEventChange = (event) => {
+    setEventText(event.target.value);
+  };
+
+  const handleSaveEvent = () => {
+    // Save event text for the selected date
+    if (selectedDate) {
+      const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
+      const updatedEvents = { ...events, [formattedDate]: eventText };
+      setEvents(updatedEvents);
+      saveEventsToLocalStorage(updatedEvents); // Update localStorage
+    }
+  };
+
+  const handleDeleteEvent = () => {
+    // Delete event for the selected date
+    if (selectedDate) {
+      const formattedDate = `${selectedDate.getDate()}-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}`;
+      const updatedEvents = { ...events };
+      delete updatedEvents[formattedDate];
+      setEvents(updatedEvents);
+      saveEventsToLocalStorage(updatedEvents); // Update localStorage
+      setSelectedDate(null);
+      setEventText('');
+    }
+  };
+
+  return (
+    <div className="calendar-container p-4  ">
+      <IoIosArrowBack  size={20} className='cursor-pointer' onClick={navigateBack}/>
+      <div className="calendar">
+        <Calendar
+          onChange={setDate}
+          value={date}
+          onClickDay={(date) => handleDateClick(date)}
+          tileClassName={({ date }) =>
+            events[`${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`]
+              ? 'event-date'
+              : null
+          }
+        />
+      </div>
+      {selectedDate && (
+        <div className="event-details">
+          <p>Selected Date: {selectedDate.toDateString()}</p>
+          <textarea
+            value={eventText}
+            onChange={handleEventChange}
+            placeholder="Add your event details..."
+            className="event-textarea"
+          />
+          <div className="button-container flex flex-row space-x-1 justify-center">
+            <button className="action-btn" onClick={handleSaveEvent}>
+              Save 
+            </button>
+            <button className="action-btn" onClick={handleDeleteEvent}>
+              Delete 
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default Calender;
+export default Calender

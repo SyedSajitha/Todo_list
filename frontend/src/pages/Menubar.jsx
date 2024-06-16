@@ -8,7 +8,7 @@ const Menubar =()=>{
   const navigate = useNavigate();
   
   const filteredButtons =[
-   {label : 'Home', variant:'outline' , path:"/home" },
+   {label : 'Home', variant:'outline' , path:"/" },
    {label : 'List of ToDo', variant:'outline', path:"/listoftodo" },
    {label : 'Calender', variant:'outline' , path : '/calender'},
    {label : 'Sticky Notes', variant:'outline' , path: '/stickynotes'},
