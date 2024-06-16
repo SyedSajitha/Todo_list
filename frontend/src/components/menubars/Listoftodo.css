@@ -1,0 +1,82 @@
+/* App.css */
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.m-4 {
+  margin: 1rem;
+}
+
+.w-80 {
+  width: 20rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-black {
+  border-color: black;
+}
+
+.search-bar{
+  width: 80%;
+  max-width: 400px;
+  padding: 8px;
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+}
+
+.todo-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  color: white;
+  padding: 2rem;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: red;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
